@@ -1,0 +1,3 @@
+# 运行时日志，由 watch.ps1 追加写入
+*.log
+procwatch.log
