@@ -50,6 +50,21 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
+# Called via -File, PowerShell passes arguments as literal strings and does not
+# split on commas, so "reg.exe,ping.exe" arrives as one element. Split here so
+# both "a,b" and an array of names behave the same.
+$ProcessName = @(
+    foreach ($entry in $ProcessName) {
+        foreach ($part in ($entry -split ',')) {
+            $name = $part.Trim()
+            if ($name) { $name }
+        }
+    }
+)
+if ($ProcessName.Count -eq 0) {
+    throw '-ProcessName is empty.'
+}
+
 $ns = 'root\subscription'
 
 $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
